@@ -1,0 +1,8 @@
+name: Issue to Jira
+description: Create Jira tickets for GitHub Issues automatically
+runs:
+  using: docker
+  image: Dockerfile
+branding:
+  icon: mail
+  color: orange

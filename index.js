@@ -2,17 +2,17 @@ const { Toolkit } = require('actions-toolkit');
 const core = require('@actions/core');
 var JiraApi = require('jira-client');
 
+var jira = new JiraApi({
+  protocol: 'https',
+  host: core.getInput('jiraHost', { required: true }),
+  username: core.getInput('jiraUsername', { required: true }),
+  password: core.getInput('jiraPassword', { required: true }),
+  apiVersion: '2',
+  strictSSL: true
+});
+
 // Run your GitHub Action!
 Toolkit.run(async tools => {
-
-  var jira = new JiraApi({
-    protocol: 'https',
-    host: core.getInput('jiraHost', { required: true }),
-    username: core.getInput('jiraUsername', { required: true }),
-    password: core.getInput('jiraPassword', { required: true }),
-    apiVersion: '2',
-    strictSSL: true
-  });
 
   const payload = tools.context.payload;
   const title = payload.issue.title;
@@ -21,11 +21,27 @@ Toolkit.run(async tools => {
   const project = core.getInput('project', { required: true });
   const assignee = core.getInput('assignee', { required: true });
 
-  addJiraTicket(project, title, body, assignee);
+  await addJiraTicket(project, title, body, assignee);
 
   tools.exit.success('We did it!')
 });
 
 function addJiraTicket(project, title, body, assignee) {
-  console.log(`Creating ticket in ${project} with ${title}`);
+  let request = {
+    fields: {
+      assignee: {
+        name: assignee,
+      },
+      project: {
+        key: project
+      },
+      summary: title,
+      description: body,
+      issuetype: {
+        name: "Task"
+      }
+    }
+  };
+
+  return jira.addNewIssue(request);
 }

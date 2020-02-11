@@ -43,5 +43,7 @@ function addJiraTicket(project, title, body, assignee) {
     }
   };
 
+  console.log(request);
+
   return jira.addNewIssue(request);
 }

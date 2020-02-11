@@ -1,5 +1,6 @@
 const { Toolkit } = require('actions-toolkit');
 const core = require('@actions/core');
+var JiraApi = require('jira-client');
 
 // Run your GitHub Action!
 Toolkit.run(async tools => {

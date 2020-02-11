@@ -18,8 +18,8 @@ Toolkit.run(async tools => {
   const title = payload.issue.title;
   const body = payload.issue.body;
 
-  const project = core.getInput('project', { required: true }),
-  const assignee = core.getInput('assignee', { required: true }),
+  const project = core.getInput('project', { required: true });
+  const assignee = core.getInput('assignee', { required: true });
 
   addJiraTicket(project, title, body, assignee);
 

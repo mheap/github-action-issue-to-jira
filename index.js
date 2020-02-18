@@ -16,7 +16,9 @@ Toolkit.run(async tools => {
 
   const payload = tools.context.payload;
   const title = payload.issue.title;
-  const body = payload.issue.body;
+  console.log(payload);
+  return;
+  const body = `${payload.issue.body}\n\n${payload.issue}`;
 
   const project = core.getInput('project', { required: true });
   const assignee = core.getInput('assignee', { required: true });

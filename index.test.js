@@ -2,6 +2,15 @@ const { Toolkit } = require('actions-toolkit')
 const nock = require('nock')
 nock.disableNetConnect()
 
+process.env.GITHUB_WORKFLOW = "test";
+process.env.GITHUB_ACTION = "issue-to-jira";
+process.env.GITHUB_ACTOR = "mheap";
+process.env.GITHUB_REPOSITORY = "mheap/action-test";
+process.env.GITHUB_EVENT_NAME = "issues";
+process.env.GITHUB_EVENT_PATH = __dirname + "/fixtures/new-issue.json";
+process.env.GITHUB_WORKSPACE = "/tmp";
+process.env.GITHUB_SHA = "15fcf5c24c414ff5a973e5bb135686215211e06d";
+
 describe('Issue to Jira', () => {
   let action, tools
 
@@ -52,17 +61,6 @@ describe('Issue to Jira', () => {
 
     tools.log.pending = jest.fn()
     tools.log.complete = jest.fn()
-
-    tools.context.payload = {
-      "issue": {
-        "title": "Hello World",
-        "body": "This is an example",
-        "html_url": "https://github.com/mheap/action-test/issues/123",
-        "user": {
-            "html_url": "https://github.com/mheap"
-        }
-      }
-    }
 
     nock('https://example.com')
       .post('/rest/api/2/issue', {"fields":{"assignee":{"name":"admin"},"project":{"key":"SP"},"summary":"Hello World","description":"This is an example\n\nRaised by: https://github.com/mheap\n\nhttps://github.com/mheap/action-test/issues/123","issuetype":{"name":"Task"}}})

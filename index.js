@@ -4,25 +4,29 @@ var JiraApi = require('jira-client');
 
 // Run your GitHub Action!
 Toolkit.run(async tools => {
-  var jira = new JiraApi({
-    protocol: 'https',
-    host: core.getInput('jiraHost', { required: true }),
-    username: core.getInput('jiraUsername', { required: true }),
-    password: core.getInput('jiraPassword', { required: true }),
-    apiVersion: '2',
-    strictSSL: true
-  });
+  try {
+    var jira = new JiraApi({
+      protocol: 'https',
+      host: core.getInput('jiraHost', { required: true }),
+      username: core.getInput('jiraUsername', { required: true }),
+      password: core.getInput('jiraPassword', { required: true }),
+      apiVersion: '2',
+      strictSSL: true
+    });
 
-  const payload = tools.context.payload;
-  const title = payload.issue.title;
-  const body = `${payload.issue.body}\n\nRaised by: ${payload.issue.user.html_url}\n\n${payload.issue.html_url}`;
+    const payload = tools.context.payload;
+    const title = payload.issue.title;
+    const body = `${payload.issue.body}\n\nRaised by: ${payload.issue.user.html_url}\n\n${payload.issue.html_url}`;
 
-  const project = core.getInput('project', { required: true });
-  const assignee = core.getInput('assignee', { required: true });
+    const project = core.getInput('project', { required: true });
+    const assignee = core.getInput('assignee', { required: true });
 
-  await addJiraTicket(jira, project, title, body, assignee);
+    await addJiraTicket(jira, project, title, body, assignee);
 
-  tools.exit.success('We did it!')
+    tools.exit.success('We did it!')
+  } catch(e) {
+    tools.exit.failure(e.message)
+  }
 });
 
 function addJiraTicket(jira, project, title, body, assignee) {

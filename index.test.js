@@ -15,7 +15,32 @@ describe('Issue to Jira', () => {
     tools = new Toolkit()
     // Mock methods on it!
     tools.exit.success = jest.fn()
+    tools.exit.failure = jest.fn()
   })
+
+  describe('Failure cases', () => {
+    afterEach(() => {
+      expect(tools.exit.failure).toHaveBeenCalled()
+    })
+
+    it('fails gracefully on missing input (Jira Host)', async () => {
+      await action(tools)
+      expect(tools.exit.failure).toHaveBeenCalledWith('Input required and not supplied: jiraHost')
+    });
+
+    it('fails gracefully on missing input (Jira Username)', async () => {
+    process.env.INPUT_JIRAHOST = "example.com";
+      await action(tools)
+      expect(tools.exit.failure).toHaveBeenCalledWith('Input required and not supplied: jiraUsername')
+    });
+
+    it('fails gracefully on missing input (Jira Password)', async () => {
+      process.env.INPUT_JIRAHOST = "example.com";
+      process.env.INPUT_JIRAUSERNAME = "adminlogin";
+      await action(tools)
+      expect(tools.exit.failure).toHaveBeenCalledWith('Input required and not supplied: jiraPassword')
+    });
+  });
 
   it('exits successfully', async () => {
     process.env.INPUT_JIRAHOST = "example.com";

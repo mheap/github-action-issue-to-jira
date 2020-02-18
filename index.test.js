@@ -16,6 +16,7 @@ describe('Issue to Jira', () => {
     // Mock methods on it!
     tools.exit.success = jest.fn()
     tools.exit.failure = jest.fn()
+    tools.log.info = jest.fn()
   })
 
   describe('Failure cases', () => {
@@ -49,6 +50,9 @@ describe('Issue to Jira', () => {
     process.env.INPUT_PROJECT = "SP";
     process.env.INPUT_ASSIGNEE = "admin";
 
+    tools.log.pending = jest.fn()
+    tools.log.complete = jest.fn()
+
     tools.context.payload = {
       "issue": {
         "title": "Hello World",
@@ -67,5 +71,7 @@ describe('Issue to Jira', () => {
     await action(tools)
     expect(tools.exit.success).toHaveBeenCalled()
     expect(tools.exit.success).toHaveBeenCalledWith('We did it!')
+    expect(tools.log.pending).toHaveBeenCalledWith("Creating Jira ticket with the following parameters");
+    expect(tools.log.complete).toHaveBeenCalledWith("Created Jira ticket");
   })
 })

@@ -61,7 +61,7 @@ describe('Issue to Jira', () => {
     }
 
     nock('https://example.com')
-      .post('/rest/api/2/issue')
+      .post('/rest/api/2/issue', {"fields":{"assignee":{"name":"admin"},"project":{"key":"SP"},"summary":"Hello World","description":"This is an example\n\nRaised by: https://github.com/mheap\n\nhttps://github.com/mheap/action-test/issues/123","issuetype":{"name":"Task"}}})
       .reply(200, {})
 
     await action(tools)

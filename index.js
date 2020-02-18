@@ -21,7 +21,13 @@ Toolkit.run(async tools => {
     const project = core.getInput('project', { required: true });
     const assignee = core.getInput('assignee', { required: true });
 
+    tools.log.pending("Creating Jira ticket with the following parameters");
+    tools.log.info(`Title: ${title}`);
+    tools.log.info(`Body: ${body}`);
+    tools.log.info(`Project: ${project}`);
+    tools.log.info(`Assignee: ${assignee}`);
     await addJiraTicket(jira, project, title, body, assignee);
+    tools.log.complete("Created Jira ticket");
 
     tools.exit.success('We did it!')
   } catch(e) {

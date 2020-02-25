@@ -35,7 +35,7 @@ async function addJiraComment(jira, tools) {
   const comment = payload.comment;
   const issue = "SP-7";
 
-  const body = `${comment.body}\n\n${comment.html_url}`;
+  const body = `${comment.body}\n\nPosted by: ${comment.user.html_url}\n\n${comment.html_url}`;
 
   tools.log.pending("Creating Jira comment with the following parameters");
   tools.log.info(`Body: ${body}`);

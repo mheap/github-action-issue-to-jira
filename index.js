@@ -35,10 +35,12 @@ async function addJiraComment(jira, tools) {
   const comment = payload.comment;
 
   const re = new RegExp(/Issue: (\w+\-\d+)/);
-  const issue = payload.issue.body.match(re);
+  let issue = payload.issue.body.match(re);
 
   if (!issue || !issue[1]) {
     tools.exit.failure("Could not find ticket number in issue body");
+  } else {
+    issue = issue[1];
   }
 
   const body = `${comment.body}\n\nPosted by: ${comment.user.html_url}\n\n${comment.html_url}`;

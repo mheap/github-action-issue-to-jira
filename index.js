@@ -35,9 +35,9 @@ async function addJiraComment(jira, tools) {
   const comment = payload.comment;
 
   const re = new RegExp(/Issue: (\w+\-\d+)/);
-  const issue = payload.issue.body.match(re)[1];
+  const issue = payload.issue.body.match(re);
 
-  if (!issue) {
+  if (!issue || !issue[1]) {
     tools.exit.failure("Could not find ticket number in issue body");
   }
 

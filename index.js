@@ -33,7 +33,13 @@ Toolkit.run(async tools => {
 async function addJiraComment(jira, tools) {
   const payload = tools.context.payload;
   const comment = payload.comment;
-  const issue = "SP-7";
+
+  const re = new RegExp(/Issue: (\w+\-\d+)/);
+  const issue = payload.issue.body.match(re)[1];
+
+  if (!issue) {
+    tools.exit.failure("Could not find ticket number in issue body");
+  }
 
   const body = `${comment.body}\n\nPosted by: ${comment.user.html_url}\n\n${comment.html_url}`;
 

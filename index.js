@@ -14,20 +14,7 @@ Toolkit.run(async tools => {
       strictSSL: true
     });
 
-    const payload = tools.context.payload;
-    const title = payload.issue.title;
-    const body = `${payload.issue.body}\n\nRaised by: ${payload.issue.user.html_url}\n\n${payload.issue.html_url}`;
-
-    const project = core.getInput('project', { required: true });
-    const assignee = core.getInput('assignee', { required: true });
-
-    tools.log.pending("Creating Jira ticket with the following parameters");
-    tools.log.info(`Title: ${title}`);
-    tools.log.info(`Body: ${body}`);
-    tools.log.info(`Project: ${project}`);
-    tools.log.info(`Assignee: ${assignee}`);
-    await addJiraTicket(jira, project, title, body, assignee);
-    tools.log.complete("Created Jira ticket");
+    await addJiraTicket(jira, tools);
 
     tools.exit.success('We did it!')
   } catch(e) {
@@ -35,7 +22,21 @@ Toolkit.run(async tools => {
   }
 });
 
-function addJiraTicket(jira, project, title, body, assignee) {
+function addJiraTicket(jira, tools) {
+  const payload = tools.context.payload;
+  const title = payload.issue.title;
+  const body = `${payload.issue.body}\n\nRaised by: ${payload.issue.user.html_url}\n\n${payload.issue.html_url}`;
+
+  const project = core.getInput('project', { required: true });
+  const assignee = core.getInput('assignee', { required: true });
+
+  tools.log.pending("Creating Jira ticket with the following parameters");
+  tools.log.info(`Title: ${title}`);
+  tools.log.info(`Body: ${body}`);
+  tools.log.info(`Project: ${project}`);
+  tools.log.info(`Assignee: ${assignee}`);
+  tools.log.complete("Created Jira ticket");
+
   let request = {
     fields: {
       assignee: {

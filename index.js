@@ -17,19 +17,36 @@ Toolkit.run(async tools => {
     const event = process.env.GITHUB_EVENT_NAME;
     if (event == 'issues') {
       await addJiraTicket(jira, tools);
-    } else if (event == 'issue_comment') {
-      console.log("A comment was added");
+  } else if (event == 'issue_comment') {
+      await addJiraComment(jira, tools);
     } else {
       tools.exit.failure(`Unknown event: ${event}`)
     }
 
     tools.exit.success('We did it!')
   } catch(e) {
+    console.log(e);
     tools.exit.failure(e.message)
   }
 });
 
-function addJiraTicket(jira, tools) {
+async function addJiraComment(jira, tools) {
+  const payload = tools.context.payload;
+  const comment = payload.comment;
+  const issue = "SP-7";
+
+  const body = `${comment.body}\n\n${comment.html_url}`;
+
+  tools.log.pending("Creating Jira comment with the following parameters");
+  tools.log.info(`Body: ${body}`);
+  tools.log.info(`Issue: ${issue}`);
+
+  const result = await jira.addComment(issue, body);
+  tools.log.complete("Comment added to Jira");
+  return result;
+}
+
+async function addJiraTicket(jira, tools) {
   const payload = tools.context.payload;
   const title = payload.issue.title;
   const body = `${payload.issue.body}\n\nRaised by: ${payload.issue.user.html_url}\n\n${payload.issue.html_url}`;
@@ -42,7 +59,6 @@ function addJiraTicket(jira, tools) {
   tools.log.info(`Body: ${body}`);
   tools.log.info(`Project: ${project}`);
   tools.log.info(`Assignee: ${assignee}`);
-  tools.log.complete("Created Jira ticket");
 
   let request = {
     fields: {
@@ -60,5 +76,7 @@ function addJiraTicket(jira, tools) {
     }
   };
 
-  return jira.addNewIssue(request);
+  const result = await jira.addNewIssue(request);
+  tools.log.complete("Created Jira ticket");
+  return result;
 }

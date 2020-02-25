@@ -14,7 +14,14 @@ Toolkit.run(async tools => {
       strictSSL: true
     });
 
-    await addJiraTicket(jira, tools);
+    const event = process.env.GITHUB_EVENT_NAME;
+    if (event == 'issues') {
+      await addJiraTicket(jira, tools);
+    } else if (event == 'issue_comment') {
+      console.log("A comment was added");
+    } else {
+      tools.exit.failure(`Unknown event: ${event}`)
+    }
 
     tools.exit.success('We did it!')
   } catch(e) {

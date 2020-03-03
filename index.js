@@ -34,6 +34,15 @@ async function addJiraComment(jira, tools) {
   const payload = tools.context.payload;
   const comment = payload.comment;
 
+  const comments = await tools.github.issues.listComments({
+    owner: tools.context.repo.owner,
+    repo: tools.context.repo.repo,
+    issue_number: tools.context.issue.number,
+    per_page: 1
+  });
+
+  console.log(comments);
+
   const re = new RegExp(/Issue: (\w+\-\d+)/);
   let issue = payload.issue.body.match(re);
 

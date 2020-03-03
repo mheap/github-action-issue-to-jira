@@ -37,17 +37,23 @@ Toolkit.run(async tools => {
 
 async function addJiraLabel(jira, tools) {
   const payload = tools.context.payload;
-  console.log(payload);
+  const label = payload.label.name;
+  const request = { "update": { "labels": [ {"add": label } ] } };
+  const issueNumber = await getIssueNumber(tools);
+  const result = await jira.updateIssue(issueNumber, request);
+  console.log(result);
 }
 
 async function removeJiraLabel(jira, tools) {
   const payload = tools.context.payload;
-  console.log(payload);
+  const label = payload.label.name;
+  const request = { "update": { "labels": [ {"remove": label } ] } };
+  const issueNumber = await getIssueNumber(tools);
+  const result = await jira.updateIssue(issueNumber, request);
+  console.log(result);
 }
 
-async function addJiraComment(jira, tools) {
-  const comment = payload.comment;
-
+async function getIssueNumber(tools) {
   const issueComment = (await tools.github.issues.listComments({
     owner: tools.context.repo.owner,
     repo: tools.context.repo.repo,
@@ -63,6 +69,14 @@ async function addJiraComment(jira, tools) {
   } else {
     issue = issue[1];
   }
+
+  return issue;
+}
+
+async function addJiraComment(jira, tools) {
+  const comment = payload.comment;
+
+  const issueComment = await getIssueNumber(tools);
 
   const body = `${comment.body}\n\nPosted by: ${comment.user.html_url}\n\n${comment.html_url}`;
 

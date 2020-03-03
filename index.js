@@ -15,9 +15,14 @@ Toolkit.run(async tools => {
     });
 
     const event = process.env.GITHUB_EVENT_NAME;
-    if (event == 'issues') {
+    const payload = tools.context.payload;
+    if (event == 'issues' && payload.action == 'opened') {
       await addJiraTicket(jira, tools);
-  } else if (event == 'issue_comment') {
+    } else if (event == 'issues' && payload.action == 'labeled') {
+      await addJiraLabel(jira, tools);
+    } else if (event == 'issues' && payload.action == 'unlabeled') {
+      await removeJiraLabel(jira, tools);
+    } else if (event == 'issue_comment') {
       await addJiraComment(jira, tools);
     } else {
       tools.exit.failure(`Unknown event: ${event}`)
@@ -30,8 +35,17 @@ Toolkit.run(async tools => {
   }
 });
 
-async function addJiraComment(jira, tools) {
+async function addJiraLabel(jira, tools) {
   const payload = tools.context.payload;
+  console.log(payload);
+}
+
+async function removeJiraLabel(jira, tools) {
+  const payload = tools.context.payload;
+  console.log(payload);
+}
+
+async function addJiraComment(jira, tools) {
   const comment = payload.comment;
 
   const issueComment = (await tools.github.issues.listComments({

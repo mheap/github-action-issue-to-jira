@@ -85,6 +85,7 @@ async function addJiraTicket(jira, tools) {
   };
 
   const result = await jira.addNewIssue(request);
+  console.log(result);
   tools.log.complete("Created Jira ticket");
   return result;
 }

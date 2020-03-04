@@ -78,7 +78,7 @@ async function addJiraComment(jira, tools) {
   const payload = tools.context.payload;
   const comment = payload.comment;
 
-  const issueComment = await getIssueNumber(tools);
+  const issue = await getIssueNumber(tools);
 
   const body = `${comment.body}\n\nPosted by: ${comment.user.html_url}\n\n${comment.html_url}`;
 

@@ -74,6 +74,7 @@ async function getIssueNumber(tools) {
 }
 
 async function addJiraComment(jira, tools) {
+  const payload = tools.context.payload;
   const comment = payload.comment;
 
   const issueComment = await getIssueNumber(tools);

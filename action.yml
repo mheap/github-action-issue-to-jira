@@ -1,8 +1,8 @@
 name: Issue to Jira
 description: Create Jira tickets for GitHub Issues automatically
 runs:
-  using: docker
-  image: Dockerfile
+  using: node12
+  main: index.dist.js
 branding:
   icon: mail
   color: orange

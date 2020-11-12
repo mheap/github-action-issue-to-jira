@@ -1,10 +1,11 @@
 {
   "name": "github-action-issue-to-jira",
   "private": true,
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "start": "node ./index.js",
-    "test": "jest"
+    "test": "jest",
+    "build": "npx @vercel/ncc build && npx convert-action"
   },
   "dependencies": {
     "@actions/core": "^1.2.6",

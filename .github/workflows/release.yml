@@ -1,14 +1,17 @@
-name: Auto-Compile
-on: 
+name: Publish
+
+on:
   release:
     types: [published, edited]
+
 jobs:
-  compile:
-    runs-on: ubuntu-18.04
+  build:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Automatically build action
-        uses: mheap/github-action-auto-compile-node@master
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - uses: JasonEtco/build-and-tag-action@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}

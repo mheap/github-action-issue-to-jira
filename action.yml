@@ -1,19 +1,19 @@
 name: Issue to Jira
 description: Create Jira tickets for GitHub Issues automatically
 runs:
-  using: docker
-  image: Dockerfile
+  using: node12
+  main: dist/index.js
 branding:
   icon: mail
   color: orange
 inputs:
   jiraHost:
-    description: "The URL of your Jira instance e.g. https://myapp.atlassian.net"
+    description: 'The URL of your Jira instance e.g. https://myapp.atlassian.net'
   jiraUsername:
-    description: "The username to authenticate with"
+    description: The username to authenticate with
   jiraPassword:
-    description: "The password for the provided username"
+    description: The password for the provided username
   project:
-    description: "The project key to create a new issue in"
+    description: The project key to create a new issue in
   assignee:
-    description: "The default assignee for any created issues"
+    description: The default assignee for any created issues
